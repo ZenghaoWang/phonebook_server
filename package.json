@@ -1,0 +1,27 @@
+{
+  "name": "phonebook_backend",
+  "version": "1.0.0",
+  "description": "server for phonebook app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZenghaoWang/phonebook_server.git"
+  },
+  "author": "Zenghao Wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZenghaoWang/phonebook_server/issues"
+  },
+  "homepage": "https://github.com/ZenghaoWang/phonebook_server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
