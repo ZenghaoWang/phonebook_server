@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ~/full_stack_2020/part_2/phonebook && npm run build --prod && cp -r build ~/phonebook_backend/",
+    "build:ui": "rm -rf build && cd ~/full_stack_2020/part_2/phonebook && npm run build --prod && cp -r build ~/phonebook_server/",
     "deploy": "git push && git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit && npm run deploy",
     "logs:prod": "heroku logs --tail"
@@ -24,9 +24,10 @@
   "homepage": "https://github.com/ZenghaoWang/phonebook_server#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "morgan": "^1.10.0",
-    "mongoose": "5.9.10"
+    "mongoose": "5.9.10",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",

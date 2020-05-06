@@ -1,11 +1,13 @@
 const express = require("express/index.js");
 const morgan = require("morgan/index.js");
 const cors = require("cors/lib/index.js");
+require("dotenv/lib/main").config();
+
+const Person = require("./models/person.js");
 
 const app = express();
 app.use(express.static("build"));
 app.use(cors());
-
 app.use(express.json());
 
 // logging
@@ -19,65 +21,42 @@ morgan.token("data", (request, response) => {
   } else return;
 });
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
-  },
-];
-
 // Info page
 app.get("/info", (request, response) => {
   date = String(new Date());
-
-  response.send(
-    `<p>Phonebook has ${persons.length} entries.</p>
-      <p>${date}</p>`
-  );
+  Person.find({}).then((persons) => {
+    response.send(
+      `<p>Phonebook has ${persons.length} ${
+        persons.length === 1 ? "entry" : "entries"
+      }.</p>
+        <p>${date}</p>`
+    );
+  });
 });
 
 // GET all entries
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((persons) => {
+    response.json(persons.map((person) => person.toJSON()));
+  });
 });
 
 // Get single entry
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  Person.findById(request.params.id).then((person) => {
+    response.json(person.toJSON());
+  });
 });
-
-const generateId = () => {
-  return Math.floor(Math.random() * 1000);
-};
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
+  Person.findByIdAndRemove(id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => {
+      console.log(`Error: ${error.message}`);
+    });
 });
 
 // Add new entry
@@ -88,14 +67,14 @@ app.post("/api/persons", (request, response) => {
     return response.status(400).json({ error: "name or number missing" });
   }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson.toJSON());
+  });
 });
 
 // Run server on port 3001
