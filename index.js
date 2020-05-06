@@ -1,6 +1,6 @@
 const express = require("express/index.js");
 const morgan = require("morgan/index.js");
-const cors = require("cors/lib/index");
+const cors = require("cors/lib/index.js");
 
 const app = express();
 app.use(express.static("build"));
